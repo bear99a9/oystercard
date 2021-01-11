@@ -4,6 +4,7 @@ MAX_BALANCE = 90
 
   def initialize
     @balance = 0
+    @active = false
   end
 
   def top_up(added)
@@ -14,4 +15,17 @@ MAX_BALANCE = 90
   def deduct(minus)
     @balance -= minus
   end
+
+  def touch_in
+    @active = true
+    @active
+  end
+
+  def in_journey?
+    @active
+  end
+
+  # def touch_out
+  #
+  # end
 end

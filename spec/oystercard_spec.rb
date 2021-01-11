@@ -19,10 +19,21 @@ describe Oystercard do
     expect{ subject.top_up(1) }.to raise_error "Cannot top up by £#{1}. Balance already at £#{max}"
   end
 
-  #deduct method that takes money off balance
-  it { is_expected.to respond_to(:deduct).with(1).argument}
-
-  it "allows you to deduct balance" do
-    expect{ subject.deduct 5 }.to change{ subject.balance}.by -5
+  it { is_expected.to respond_to(:touch_in)}
+  it ' when touched in, change in journey status' do
+    expect{ subject.touch_in }.to change{ subject.in_journey? }.to true
   end
+
+
+  it 'when not touched in journey returns false' do
+    expect(subject).not_to be_in_journey
+  end
+
+  it "can touch in" do
+    subject.touch_in
+    expect(subject).to be_in_journey
+  end
+
+  # it { is_expected.to respond_to(:touch_out)}
+
 end
