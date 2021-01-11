@@ -2,8 +2,8 @@ class Oystercard
   attr_reader :balance
   MAX_BALANCE = 90
 
-  def initialize
-    @balance = 0
+  def initialize(balance = 0)
+    @balance = balance
     @active = false
   end
 
@@ -17,6 +17,7 @@ class Oystercard
   end
 
   def touch_in
+    fail "insufficient funds for journey" if @balance < 1
     @active = true
   end
 

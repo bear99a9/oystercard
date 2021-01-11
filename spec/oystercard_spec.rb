@@ -21,10 +21,10 @@ describe Oystercard do
     end
 
     it "allows you to deduct from balance" do
-      expect{ subject.deduct 5 }.to change{ subject.balance}.by -5 
+      expect{ subject.deduct 5 }.to change{ subject.balance}.by -5
     end
 
-  end 
+  end
 
 
   # it { is_expected.to respond_to(:touch_in)}
@@ -41,8 +41,14 @@ describe Oystercard do
     subject.touch_in
     expect(subject).to be_in_journey
   end
-
-  it "can touch in" do
+  # context 'when balance less than $1' do
+    it "raises error when insufficient funds" do
+      # subject.top_up(90)
+      # subject.deduct(90)
+      expect{ subject.touch_in }.to raise_error "insufficient funds for journey"
+    end
+  # end
+  it "can touch out" do
     subject.touch_in
     subject.touch_out
     expect(subject).not_to be_in_journey
