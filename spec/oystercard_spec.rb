@@ -1,7 +1,5 @@
 require 'oystercard'
 
-#random comment for first push 
-
 describe Oystercard do
   let(:topped_up_card) { Oystercard.new(Oystercard::MAX_BALANCE) }
 
@@ -11,7 +9,7 @@ describe Oystercard do
   end
 
   it 'has a balance of zero' do
-    expect(subject.balance).to eq(0)
+    expect(subject.balance).to eq(Oystercard::DEFAULT_BALANCE)
   end
 
   describe '#top_up' do
@@ -28,22 +26,22 @@ describe Oystercard do
     end
   end
 
-  it 'deducts an amount from the balance' do
-   topped_up_card
-   expect{ topped_up_card.deduct 7 }.to change{ topped_up_card.balance }.by -7
-  end
-
   it 'is initially not in a journey' do
     expect(subject).not_to be_in_journey
   end
 
+  context "touch out" do
+    it "can touch out" do
+      topped_up_card.touch_in
+      topped_up_card.touch_out
+      expect(topped_up_card).not_to be_in_journey
+    end
 
-  it "can touch out" do
-    topped_up_card.touch_in
-    topped_up_card.touch_out
-    expect(topped_up_card).not_to be_in_journey
+    it 'deducts money from balance' do
+      topped_up_card.touch_in
+      expect { topped_up_card.touch_out }.to change{ topped_up_card.balance}.by(-Oystercard::MIN_FARE)
+    end
   end
-
 
   it "can touch in" do
 
