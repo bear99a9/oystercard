@@ -1,7 +1,8 @@
 require 'oystercard'
 
 describe Oystercard do
-  let(:topped_up_card) { Oystercard.new(90) }
+  let(:topped_up_card) { Oystercard.new(Oystercard::MAX_BALANCE) }
+
 
   it 'should have a default balance' do
   expect(subject.balance).to eq Oystercard::DEFAULT_BALANCE
