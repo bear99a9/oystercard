@@ -21,9 +21,8 @@ describe Oystercard do
     end
 
     it 'raises an error when maximum balance is exceeded' do
-      max = Oystercard::MAX_BALANCE
       topped_up_card
-      expect{ topped_up_card.top_up(1) }.to raise_error "Cannot top up by £#{1}. Balance already at £#{max}"
+      expect{ topped_up_card.top_up(1) }.to raise_error "Cannot top up by £#{1}. Balance already at £#{Oystercard::MAX_BALANCE}"
     end
   end
 
