@@ -1,8 +1,7 @@
 require 'oystercard'
 
 describe Oystercard do
-
-let(:topped_up_card) {Oystercard.new(20)}
+  let(:topped_up_card) { Oystercard.new(90) }
 
   it 'should have a default balance' do
   expect(subject.balance).to eq Oystercard::DEFAULT_BALANCE
@@ -22,14 +21,14 @@ let(:topped_up_card) {Oystercard.new(20)}
 
     it 'raises an error when maximum balance is exceeded' do
       max = Oystercard::MAX_BALANCE
-      subject.top_up(max)
-      expect{ subject.top_up(1) }.to raise_error "Cannot top up by £#{1}. Balance already at £#{max}"
+      topped_up_card
+      expect{ topped_up_card.top_up(1) }.to raise_error "Cannot top up by £#{1}. Balance already at £#{max}"
     end
   end
 
   it 'deducts an amount from the balance' do
-   subject.top_up(20)
-   expect{ subject.deduct 7 }.to change{ subject.balance }.by -7
+   topped_up_card
+   expect{ topped_up_card.deduct 7 }.to change{ topped_up_card.balance }.by -7
   end
 
   it 'is initially not in a journey' do
@@ -38,17 +37,16 @@ let(:topped_up_card) {Oystercard.new(20)}
 
 
   it "can touch out" do
-    subject.top_up(20)
-    subject.touch_in
-    subject.touch_out
-    expect(subject).not_to be_in_journey
+    topped_up_card.touch_in
+    topped_up_card.touch_out
+    expect(topped_up_card).not_to be_in_journey
   end
 
 
   it "can touch in" do
-    subject.top_up(20)
-    subject.touch_in
-    expect(subject).to be_in_journey
+
+    topped_up_card.touch_in
+    expect(topped_up_card).to be_in_journey
   end
 
   context 'No credit on card' do

@@ -4,8 +4,8 @@ class Oystercard
   MIN_BALANCE = 1
   DEFAULT_BALANCE = 0
 
-  def initialize
-    @balance = DEFAULT_BALANCE
+  def initialize(balance = DEFAULT_BALANCE)
+    @balance = balance
     @active = false
   end
 
