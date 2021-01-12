@@ -2,12 +2,9 @@ require 'oystercard'
 
 describe Oystercard do
   let(:topped_up_card) { Oystercard.new(Oystercard::MAX_BALANCE) }
-  let(:station) { double :station }
+  let(:entry_station) { double :entry_station }
   let(:exit_station) { double :exit_station }
-
-  it 'should have a default balance' do
-  expect(subject.balance).to eq Oystercard::DEFAULT_BALANCE
-  end
+  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
 
   it 'has a balance of zero' do
     expect(subject.balance).to eq(Oystercard::DEFAULT_BALANCE)
@@ -33,23 +30,23 @@ describe Oystercard do
 
   context "touch out" do
     it "can touch out" do
-      topped_up_card.touch_in(station)
+      topped_up_card.touch_in(entry_station)
       topped_up_card.touch_out(exit_station)
       expect(topped_up_card).not_to be_in_journey
     end
 
     it 'deducts money from balance' do
-      topped_up_card.touch_in(station)
+      topped_up_card.touch_in(entry_station)
       expect { topped_up_card.touch_out(exit_station) }.to change{ topped_up_card.balance}.by(-Oystercard::MIN_FARE)
     end
 
     it 'wipes entry station variable' do
-      topped_up_card.touch_in(station)
+      topped_up_card.touch_in(entry_station)
       expect { topped_up_card.touch_out(exit_station) }.to change{ topped_up_card.entry_station}.to(nil)
     end
 
     it "touch_out method to store exit station" do
-      topped_up_card.touch_in(station)
+      topped_up_card.touch_in(entry_station)
       topped_up_card.touch_out(exit_station)
       expect(topped_up_card.exit_station).to eq exit_station
     end
@@ -57,18 +54,29 @@ describe Oystercard do
   end
 
   it "can touch in" do
-    topped_up_card.touch_in(station)
+    topped_up_card.touch_in(entry_station)
     expect(topped_up_card).to be_in_journey
   end
 
   it "touch_in method to store entry station" do
-    topped_up_card.touch_in(station)
-    expect(topped_up_card.entry_station).to eq station
+    topped_up_card.touch_in(entry_station)
+    expect(topped_up_card.entry_station).to eq entry_station
   end
 
   context 'No credit on card' do
     it 'will not touch in if below minimum balance' do
-      expect{ subject.touch_in(station) }.to raise_error "Insufficient funds for journey"
+      expect{ subject.touch_in(entry_station) }.to raise_error "Insufficient funds for journey"
     end
   end
+
+  it 'has an empty list of journeys by default' do
+    expect(subject.journeys).to be_empty
+  end
+
+  it 'stores journeys stations' do
+    topped_up_card.touch_in(entry_station)
+    topped_up_card.touch_out(exit_station)
+    expect(topped_up_card.journeys).to include journey
+  end
+
 end

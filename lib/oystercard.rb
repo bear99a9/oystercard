@@ -1,5 +1,6 @@
 class Oystercard
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :journeys, :exit_station
+
   MAX_BALANCE = 90
   MIN_BALANCE = 1
   MIN_FARE = 1
@@ -8,6 +9,9 @@ class Oystercard
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
     @entry_station = nil
+    @exit_station = nil
+    @journeys = []
+    @journey = { entrance_station: @entry_station, exit_station: @exit_station }
   end
 
   def top_up(added)
@@ -15,19 +19,22 @@ class Oystercard
     @balance += added
   end
 
-  def touch_in(station)
+  def touch_in(entry_station)
     fail "Insufficient funds for journey" if @balance < MIN_BALANCE
-    @entry_station = station
+    @entry_station = entry_station
+    @journey[:entrance_station] = @entry_station
   end
 
   def in_journey?
-    @entry_station == nil ? false : true
+    !!entry_station #== nil ? false : true
   end
 
   def touch_out(exit_station)
     deduct(MIN_FARE)
-    @entry_station = nil
     @exit_station = exit_station
+    @journey[:exit_station] = @exit_station
+    @journeys << @journey
+    @entry_station = nil
   end
 
   def entry_station
@@ -38,6 +45,10 @@ class Oystercard
     @exit_station
   end
 
+  def journeys
+    @journey
+  end
+
   private
 
   def deduct(minus)
@@ -45,3 +56,13 @@ class Oystercard
   end
 
 end
+
+# array_1 = []
+# array_to_hash = []
+# array_1 << :mile_end
+# array_1 << :ealing
+# p array_to_hash << array_1
+# p array_to_hash.to_h
+# hash = {}
+# hash.merge!(array_to_hash.to_h)
+# p hash
