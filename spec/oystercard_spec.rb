@@ -3,6 +3,7 @@ require 'oystercard'
 describe Oystercard do
   let(:topped_up_card) { Oystercard.new(Oystercard::MAX_BALANCE) }
   let(:station) { double :station }
+  let(:exit_station) { double :exit_station }
 
   it 'should have a default balance' do
   expect(subject.balance).to eq Oystercard::DEFAULT_BALANCE
@@ -33,18 +34,24 @@ describe Oystercard do
   context "touch out" do
     it "can touch out" do
       topped_up_card.touch_in(station)
-      topped_up_card.touch_out
+      topped_up_card.touch_out(exit_station)
       expect(topped_up_card).not_to be_in_journey
     end
 
     it 'deducts money from balance' do
       topped_up_card.touch_in(station)
-      expect { topped_up_card.touch_out }.to change{ topped_up_card.balance}.by(-Oystercard::MIN_FARE)
+      expect { topped_up_card.touch_out(exit_station) }.to change{ topped_up_card.balance}.by(-Oystercard::MIN_FARE)
     end
 
     it 'wipes entry station variable' do
       topped_up_card.touch_in(station)
-      expect { topped_up_card.touch_out }.to change{ topped_up_card.entry_station}.to(nil)
+      expect { topped_up_card.touch_out(exit_station) }.to change{ topped_up_card.entry_station}.to(nil)
+    end
+
+    it "touch_out method to store exit station" do
+      topped_up_card.touch_in(station)
+      topped_up_card.touch_out(exit_station)
+      expect(topped_up_card.exit_station).to eq exit_station
     end
 
   end

@@ -24,13 +24,18 @@ class Oystercard
     @entry_station == nil ? false : true
   end
 
-  def touch_out
+  def touch_out(exit_station)
     deduct(MIN_FARE)
     @entry_station = nil
+    @exit_station = exit_station
   end
 
   def entry_station
     @entry_station
+  end
+
+  def exit_station
+    @exit_station
   end
 
   private
