@@ -70,13 +70,14 @@ describe Oystercard do
   end
 
   it 'has an empty list of journeys by default' do
-    expect(subject.journeys).to be_empty
+    card = Oystercard.new
+    expect(card.journeys).to be_empty
   end
 
-  it 'stores journeys stations' do
+  it 'stores the journey' do
     topped_up_card.touch_in(entry_station)
     topped_up_card.touch_out(exit_station)
-    expect(topped_up_card.journeys).to include journey
+    expect(topped_up_card.journeys).to include(journey)
   end
 
 end

@@ -9,9 +9,9 @@ class Oystercard
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
     @entry_station = nil
-    @exit_station = nil
     @journeys = []
-    @journey = { entrance_station: @entry_station, exit_station: @exit_station }
+    @exit_station = nil
+    @journey = { entry_station: @entry_station, exit_station: @exit_station }
   end
 
   def top_up(added)
@@ -22,12 +22,19 @@ class Oystercard
   def touch_in(entry_station)
     fail "Insufficient funds for journey" if @balance < MIN_BALANCE
     @entry_station = entry_station
-    @journey[:entrance_station] = @entry_station
+    @journey[:entry_station] = @entry_station
   end
 
   def in_journey?
-    !!entry_station #== nil ? false : true
+    !!entry_station #if nil the first ! turns it into true,
+    # the second back into false see below if statement
+    # if entry_station == nil
+    #   false
+    # else
+    #   true
+    # end
   end
+
 
   def touch_out(exit_station)
     deduct(MIN_FARE)
@@ -43,10 +50,6 @@ class Oystercard
 
   def exit_station
     @exit_station
-  end
-
-  def journeys
-    @journey
   end
 
   private
