@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
   let(:topped_up_card) { Oystercard.new(Oystercard::MAX_BALANCE) }
-
+  let(:station) { double :station }
 
   it 'should have a default balance' do
   expect(subject.balance).to eq Oystercard::DEFAULT_BALANCE
@@ -32,26 +32,30 @@ describe Oystercard do
 
   context "touch out" do
     it "can touch out" do
-      topped_up_card.touch_in
+      topped_up_card.touch_in(station)
       topped_up_card.touch_out
       expect(topped_up_card).not_to be_in_journey
     end
 
     it 'deducts money from balance' do
-      topped_up_card.touch_in
+      topped_up_card.touch_in(station)
       expect { topped_up_card.touch_out }.to change{ topped_up_card.balance}.by(-Oystercard::MIN_FARE)
     end
   end
 
   it "can touch in" do
-
-    topped_up_card.touch_in
+    topped_up_card.touch_in(station)
     expect(topped_up_card).to be_in_journey
+  end
+
+  it "touch_in method to store entry station" do
+    topped_up_card.touch_in(station)
+    expect(topped_up_card.entry_station).to eq station
   end
 
   context 'No credit on card' do
     it 'will not touch in if below minimum balance' do
-      expect{ subject.touch_in }.to raise_error "Insufficient funds for journey"
+      expect{ subject.touch_in(station) }.to raise_error "Insufficient funds for journey"
     end
   end
 end
