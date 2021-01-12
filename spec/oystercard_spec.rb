@@ -41,6 +41,12 @@ describe Oystercard do
       topped_up_card.touch_in(station)
       expect { topped_up_card.touch_out }.to change{ topped_up_card.balance}.by(-Oystercard::MIN_FARE)
     end
+
+    it 'wipes entry station variable' do
+      topped_up_card.touch_in(station)
+      expect { topped_up_card.touch_out }.to change{ topped_up_card.entry_station}.to(nil)
+    end
+
   end
 
   it "can touch in" do
