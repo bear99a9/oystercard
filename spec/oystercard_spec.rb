@@ -15,12 +15,12 @@ describe Oystercard do
 
 
     it 'can top up the balance' do
-      expect{ subject.top_up 5 }.to change{ subject.balance }.by 5
+      expect{ subject.top_up Oystercard::MIN_BALANCE }.to change{ subject.balance }.by Oystercard::MIN_BALANCE
     end
 
     it 'raises an error when maximum balance is exceeded' do
       topped_up_card
-      expect{ topped_up_card.top_up(1) }.to raise_error "Cannot top up by £#{1}. Balance already at £#{Oystercard::MAX_BALANCE}"
+      expect{ topped_up_card.top_up(Oystercard::MIN_BALANCE) }.to raise_error "Cannot top up by £#{Oystercard::MIN_BALANCE}. Balance already at £#{Oystercard::MAX_BALANCE}"
     end
   end
 

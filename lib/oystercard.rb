@@ -26,13 +26,9 @@ class Oystercard
   end
 
   def in_journey?
-    !!entry_station #if nil the first ! turns it into true,
-    # the second back into false see below if statement
-    # if entry_station == nil
-    #   false
-    # else
-    #   true
-    # end
+    !!entry_station #if nil the first ! turns it into false,
+    # the second bang turns it into true see below if statement
+    #entry_station == nil ? false : true
   end
 
 
@@ -44,14 +40,6 @@ class Oystercard
     @entry_station = nil
   end
 
-  def entry_station
-    @entry_station
-  end
-
-  def exit_station
-    @exit_station
-  end
-
   private
 
   def deduct(minus)
@@ -59,13 +47,3 @@ class Oystercard
   end
 
 end
-
-# array_1 = []
-# array_to_hash = []
-# array_1 << :mile_end
-# array_1 << :ealing
-# p array_to_hash << array_1
-# p array_to_hash.to_h
-# hash = {}
-# hash.merge!(array_to_hash.to_h)
-# p hash
