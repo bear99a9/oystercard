@@ -8,4 +8,10 @@ class Journey
     @exit_station = nil
   end
 
+  def in_journey?
+    !!entry_station #if nil the first ! turns it into false,
+    # the second bang turns it into true see below if statement
+    #entry_station == nil ? false : true
+  end
+  
 end

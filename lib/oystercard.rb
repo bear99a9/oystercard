@@ -27,12 +27,6 @@ class Oystercard
     @journey[:entry_station] = @entry_station
   end
 
-  def in_journey?
-    !!entry_station #if nil the first ! turns it into false,
-    # the second bang turns it into true see below if statement
-    #entry_station == nil ? false : true
-  end
-
 
   def touch_out(exit_station)
     deduct(MIN_FARE)
