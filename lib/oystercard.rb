@@ -1,7 +1,8 @@
 require_relative 'Journey'
+require_relative 'Station'
 
 class Oystercard
-  attr_reader :balance, :entry_station, :journeys, :exit_station
+  attr_reader :balance, :current_journey, :list_of_journeys
 
   MAX_BALANCE = 90
   MIN_BALANCE = 1
@@ -10,10 +11,9 @@ class Oystercard
 
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
-    @entry_station = nil
-    @journeys = []
-    @exit_station = nil
-    @journey = { entry_station: @entry_station, exit_station: @exit_station }
+    @list_of_journeys = []
+    @current_journey = nil
+    # @journey = { entry_station: @entry_station, exit_station: @exit_station }
   end
 
   def top_up(added)
@@ -23,17 +23,34 @@ class Oystercard
 
   def touch_in(entry_station)
     fail "Insufficient funds for journey" if @balance < MIN_BALANCE
-    @entry_station = entry_station
-    @journey[:entry_station] = @entry_station
+    penalty_touch_in if in_journey?
+    @current_journey = Journey.new(entry_station)
+    in_journey?
   end
 
 
   def touch_out(exit_station)
-    deduct(MIN_FARE)
-    @exit_station = exit_station
-    @journey[:exit_station] = @exit_station
-    @journeys << @journey
-    @entry_station = nil
+    penalty_touch_out unless in_journey?
+    @current_journey.exit_station = exit_station
+    @list_of_journeys << @current_journey
+    deduct(@current_journey.fare)
+    @current_journey = nil
+    in_journey?
+  end
+
+  def in_journey?
+    !!@current_journey
+  end
+
+  def penalty
+    @current_journey.exit_station = "Penalty"
+    @current_journey = nil
+    "#{Journey::PENALTY_FARE} penalty charge for not touching out"
+  end
+
+  def penalty_touch_out
+    @current_journey = Journey.new("Penalty")
+    "£#{Journey::PENALTY_FARE} penalty charge for not touching in"
   end
 
   private
@@ -41,5 +58,4 @@ class Oystercard
   def deduct(minus)
     @balance -= minus
   end
-
 end

@@ -1,4 +1,8 @@
+require_relative 'oystercard'
+
 class Journey
+  PENALTY_FARE = 3
+  MIN_FARE = 1
 
   attr_reader :entry_station
   attr_accessor :exit_station
@@ -8,10 +12,12 @@ class Journey
     @exit_station = nil
   end
 
-  def in_journey?
-    !!entry_station #if nil the first ! turns it into false,
-    # the second bang turns it into true see below if statement
-    #entry_station == nil ? false : true
+  def current_journey?
+    @exit_station == nil
   end
-  
+
+  def fare
+    entry_station == "Penalty" || exit_station == "Penalty" ? PENALTY_FARE : MIN_FARE
+  end
+
 end
