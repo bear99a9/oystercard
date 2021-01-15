@@ -20,4 +20,5 @@ class Journey
     entry_station == "Penalty" || exit_station == "Penalty" ? PENALTY_FARE : MIN_FARE
   end
 
+
 end

@@ -15,15 +15,6 @@ describe Journey do
     it 'exit station equals nil' do
       expect(journey.exit_station).to eq nil
     end
-
-    it 'current_journey' do
-      expect(journey.current_journey?).to eq true
-    end
-  end
-
-  it 'returns exit station' do
-    journey.exit_station = "Bow"
-    expect(journey.exit_station).to eq "Bow"
   end
 
   context 'normal completed journey' do
@@ -31,6 +22,11 @@ describe Journey do
     it 'charges min fare' do
       journey.exit_station = "Bow"
       expect(journey.fare).to eq Journey::MIN_FARE
+    end
+
+    it 'returns exit station' do
+      journey.exit_station = "Bow"
+      expect(journey.exit_station).to eq "Bow"
     end
   end
 
@@ -44,5 +40,7 @@ describe Journey do
     it 'deducts penalty fare if touches out without touching in' do
       expect(penalty.fare).to eq Journey::PENALTY_FARE
     end
+
+
   end
 end

@@ -23,9 +23,10 @@ class Oystercard
 
   def touch_in(entry_station)
     fail "Insufficient funds for journey" if @balance < MIN_BALANCE
+    in_journey?
     penalty_touch_in if in_journey?
     @current_journey = Journey.new(entry_station)
-    in_journey?
+    return "Touched in at #{entry_station}"
   end
 
 
@@ -36,26 +37,27 @@ class Oystercard
     deduct(@current_journey.fare)
     @current_journey = nil
     in_journey?
+    return "Touched out at #{exit_station}"
   end
 
   def in_journey?
     !!@current_journey
   end
 
-  def penalty
-    @current_journey.exit_station = "Penalty"
-    @current_journey = nil
-    "#{Journey::PENALTY_FARE} penalty charge for not touching out"
-  end
-
-  def penalty_touch_out
-    @current_journey = Journey.new("Penalty")
-    "£#{Journey::PENALTY_FARE} penalty charge for not touching in"
-  end
 
   private
 
   def deduct(minus)
     @balance -= minus
+  end
+  def penalty_touch_in
+    @current_journey.exit_station = "Penalty"
+    @current_journey = nil
+    puts "£#{Journey::PENALTY_FARE} penalty charge for not touching out"
+  end
+
+  def penalty_touch_out
+    @current_journey = Journey.new("Penalty")
+    puts "£#{Journey::PENALTY_FARE} penalty charge for not touching in"
   end
 end
